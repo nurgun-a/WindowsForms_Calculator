@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace WindowsForms_Calculator
 {
@@ -28,7 +29,11 @@ namespace WindowsForms_Calculator
             try
             {
                 DataTable d = new DataTable();
-                textBox1.Text = d.Compute(textBox1.Text, "").ToString();
+                Regex r_text1 = new Regex("[a-zA-Zа-яА-Я!@#$%^&]*");
+                Regex r_text2 = new Regex(",");
+                string str = r_text1.Replace(textBox1.Text, "");
+                str = r_text2.Replace(str, ".");
+                textBox1.Text = d.Compute(str, "").ToString();                   
             }
             catch (Exception ex)
             {
@@ -45,12 +50,7 @@ namespace WindowsForms_Calculator
         {
             try
             {
-                string str = "";
-                for (int i = 0; i < textBox1.Text.Length - 1; i++)
-                {
-                    str += textBox1.Text[i];
-                }
-                textBox1.Text = str;
+                if(textBox1.Text.Length>0) textBox1.Text = textBox1.Text.Remove(textBox1.Text.Trim().Length - 1);
             }
             catch (Exception ex)
             {
@@ -58,5 +58,16 @@ namespace WindowsForms_Calculator
             }            
         }
 
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode==Keys.Enter)
+            {
+                button17_Click( sender, e);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
+        }
     }
 }
